@@ -43,7 +43,13 @@
   --hero-bg: #111827;
   --hero-dots: rgba(255, 255, 255, 0.06);
   --hero-title: #ffffff;
-  --hero-title-accent: #fca5a5;
+  /* One hero red: a UNLV-family red that passes AA for large text on --hero-bg. */
+  --hero-accent: #f05252;
+  --hero-title-accent: var(--hero-accent);
+  --hero-stat-label: #9ca3af;
+  --hero-stat-rule: rgba(255, 255, 255, 0.12);
+  --hero-avatar-ring: rgba(255, 255, 255, 0.18);
+  --hero-toggle-border: rgba(255, 255, 255, 0.2);
   --hero-body: #d1d5db;
   --hero-chip-bg: rgba(255, 255, 255, 0.08);
   --hero-chip-text: #e5e7eb;
@@ -188,14 +194,19 @@ a { color: var(--accent) }
   flex-direction: column;
   justify-content: center;
   gap: 5px;
+  flex: none;
   width: 44px;
   height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0 10px;
   background: transparent;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
 }
+
+.nav-toggle:focus-visible { outline: 2px solid var(--text); outline-offset: 2px }
 
 .nav-toggle span {
   display: block;
@@ -236,7 +247,9 @@ a { color: var(--accent) }
   text-underline-offset: 6px;
 }
 
-.home .site-header:not(.header--scrolled) .nav-toggle { border-color: var(--hero-ghost-border) }
+.home .site-header:not(.header--scrolled) .nav-toggle { border-color: var(--hero-toggle-border) }
+
+.home .site-header:not(.header--scrolled) .nav-toggle:focus-visible { outline: 2px solid var(--hero-title) }
 
 .home .site-header:not(.header--scrolled) .nav-toggle span { background: var(--hero-title) }
 
@@ -423,7 +436,14 @@ a { color: var(--accent) }
 
 .proof-card li { display: flex; align-items: center; gap: 10px; white-space: nowrap }
 
-.proof-icon { flex: none; color: var(--brand) }
+.proof-icon { flex: none; color: var(--hero-accent) }
+
+/* Mobile-only pieces: on desktop the avatar row collapses to just the status chip
+   and the stat strip is hidden (the proof card carries that content). */
+.hero-top { display: contents }
+
+.hero-avatar,
+.hero-stats { display: none }
 
 .proof-label { color: var(--proof-label); font-weight: 500 }
 
@@ -1025,22 +1045,70 @@ pre { background: #0f172a; color: #e6eef8; padding: 1rem; border-radius: 6px; ov
 @media (max-width: 720px) {
   :root { --text-section: 1.75rem; --text-card-title: 1.25rem }
 
-  .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-block: 40px 48px }
+  .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 0; padding-block: 28px 40px }
 
-  /* The text comes first in the source; only the visual order puts the photo on top. */
-  .hero-media { order: -1; justify-self: stretch; max-width: none }
+  /* Text first; the big portrait and floating proof card leave the mobile flow, replaced
+     by the avatar row and the stat strip so the name and résumé button stay above the fold. */
+  .hero-text { order: -1 }
 
-  .hero-photo { max-width: 280px; margin: 0 auto }
+  .hero-media { display: none }
 
-  .proof-card { position: static; margin-top: 16px; width: 100% }
+  .hero-top { display: flex; align-items: center; gap: 12px }
 
-  .proof-card li { white-space: normal }
+  .hero-avatar {
+    display: block;
+    flex: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 20%;
+    box-shadow: 0 0 0 2px var(--hero-avatar-ring);
+  }
 
-  .hero-title { font-size: clamp(2.5rem, 11vw, 3.25rem) }
+  .hero-status { margin: 0 }
 
-  .hero-actions { flex-direction: column; align-items: stretch }
+  .hero-title {
+    margin: 16px 0 0 0;
+    font-size: clamp(2.5rem, 11vw, 3rem);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+  }
+
+  .hero-intro { margin: 16px 0 28px 0; font-size: 1.0625rem; line-height: 1.6; color: var(--hero-body) }
+
+  .hero-actions { flex-direction: column; align-items: stretch; gap: 4px }
 
   .hero-btn { width: 100% }
+
+  /* Secondary CTA drops to a text link so the résumé button is clearly the main action. */
+  .hero-btn--ghost {
+    min-height: 48px;
+    padding: 0 16px;
+    border: none;
+    background: transparent;
+    color: var(--hero-title);
+    font-weight: 600;
+  }
+
+  .hero-btn--ghost:hover,
+  .hero-btn--ghost:focus-visible { text-decoration: underline; text-underline-offset: 4px }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 24px 0 0 0;
+    padding: 16px 0 0 0;
+    list-style: none;
+    border-top: 1px solid var(--hero-stat-rule);
+  }
+
+  .hero-stats li { display: flex; flex-direction: column; gap: 2px; min-width: 0 }
+
+  .hero-stat-value { font-size: 0.95rem; font-weight: 700; color: var(--hero-title); line-height: 1.3 }
+
+  .hero-stat-label { font-size: 0.75rem; color: var(--hero-stat-label); line-height: 1.35 }
 
   .contact { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 28px }
 
