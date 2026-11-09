@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Hill-climbing design loop for a static HTML/CSS site.
+Hill-climbing design loop for a static site (HTML, CSS, JS, SVG).
 
 Each cycle:  screenshot -> designer proposes ONE change -> builder edits files
              -> hard gates (console/page errors, broken local assets)
@@ -44,7 +44,13 @@ MAX_REJECTS = 6          # rejects in a row before giving up (local maximum)
 CHECKPOINT_EVERY = 5     # pause for a human look after this many accepted changes
 VIEWPORTS = {"desktop": (1440, 900), "mobile": (390, 844)}
 MAX_SHOT_HEIGHT = 3000   # crop very long pages so images stay legible
-EDITABLE = (".html", ".htm", ".css")
+# Agents may create or edit any file with these extensions (new pages, scripts,
+# SVG art, data files) anywhere in the site, except the protected paths below.
+EDITABLE = (".html", ".htm", ".css", ".js", ".mjs", ".svg", ".json", ".webmanifest", ".txt")
+# Never touched: the Cloudflare Worker (deployed separately), generated blog posts
+# (regenerated from source), the resume, and repo/tooling files.
+PROTECTED = ("worker/", "posts/", ".git/", "CLAUDE.md", "README.md", ".gitignore",
+             "hillclimb.py", "rubric.md", "Finnagin-Wantland-Resume.pdf")
 
 JUDGES = {
     "hierarchy": "Visual hierarchy and focus: is it obvious what matters most and where to look next?",
@@ -198,7 +204,7 @@ def designer(shots, rubric, feedback, history, bold):
     size = ("Previous small changes have been rejected repeatedly. Propose a BOLDER, "
             "higher-impact change this time." if bold else
             "Propose ONE focused, well-scoped change.")
-    prompt = f"""You are a senior web designer improving a static HTML/CSS website step by step.
+    prompt = f"""You are a senior web designer improving a static website step by step.
 
 Rubric the site is judged on:
 {rubric}
@@ -209,27 +215,43 @@ Latest critiques from the judging council:
 Recent attempts (don't repeat rejected ideas verbatim):
 {recent}
 
-{size} It must be implementable by editing HTML/CSS only (no JS frameworks or build tools).
+{size} You have real creative freedom: the change can restructure markup, restyle
+anything, add or rework JavaScript interactions and animation, add inline SVG or new
+SVG illustrations, or add new sections or pages. It must still work as a hand-written
+static site (no build step, bundler or package manager), and must not touch the
+contact Worker, the generated blog posts in posts/, or the resume PDF.
 Reply with JSON only: {{"change": "<specific, concrete instruction for a developer>", "why": "<one sentence>"}}"""
     return extract_json(ask(DESIGNER_MODEL, [*shots_content(shots), {"type": "text", "text": prompt}]))
 
 
 def builder(site_dir, change, git):
     """Claude Code edits the site files directly (no shell access)."""
-    prompt = f"""You are editing the static HTML/CSS website in the current directory.
+    prompt = f"""You are editing the static website (HTML, CSS, JS, SVG) in the current directory.
 Implement exactly this change, nothing more:
 
 {change}
 
-Only edit .html, .htm and .css files. Don't add JavaScript, build tools or new dependencies.
+You may create or edit files with these extensions: {", ".join(EDITABLE)}.
+Do not touch: {", ".join(PROTECTED)}. Follow the conventions in CLAUDE.md
+(shared chrome duplicated across pages, colors only via CSS custom properties,
+no inline <style> blocks, bump styles.css?v=N on every page when styles.css changes).
+JavaScript is allowed: keep page-specific scripts inline on their page and shared
+behavior in site.js, respect prefers-reduced-motion, and make sure nothing throws
+or logs console errors. No build tools or package managers; a library from a CDN is
+fine only with a pinned version and only if it clearly earns its place.
 When done, reply with one line summarizing what you changed."""
     ask(BUILDER_MODEL, prompt, cwd=site_dir, tools="Read,Edit,Write,Glob,Grep")
-    changed = [line[3:] for line in git("status", "--porcelain").splitlines()]
+    changed = []
+    for line in git("status", "--porcelain", "--untracked-files=all").splitlines():
+        # renames are "R  old -> new": check both sides
+        changed += [f.strip().strip('"') for f in line[3:].split(" -> ")]
     if not changed:
         raise ValueError("builder made no changes")
-    bad = [f for f in changed if not f.endswith(EDITABLE)]
+    bad = [f for f in changed
+           if not f.lower().endswith(EDITABLE)
+           or any(f == p or f.startswith(p) for p in PROTECTED)]
     if bad:
-        raise ValueError(f"builder touched non-HTML/CSS files: {bad}")
+        raise ValueError(f"builder touched disallowed files: {bad}")
     return len(changed)
 
 
