@@ -37,7 +37,7 @@ Every page links to **`Finnagin-Wantland-Resume.pdf` at the repo root** — nav 
 
 **All CSS lives in `styles.css`**, linked as `styles.css?v=N` on all three pages. Cloudflare and browsers cache CSS for hours, so **bump `N` on all three pages whenever `styles.css` changes** or visitors get the old stylesheet with the new markup. There are deliberately **no inline `<style>` blocks and no hardcoded hex colors in the HTML** — the pages previously had `<style>` tags scattered mid-body (inside `<nav>`, inside `.hero-image`) whose specificity silently overrode the stylesheet. Keep it that way.
 
-**Everything is themed through custom properties.** `:root` defines the tokens; a `prefers-color-scheme: dark` block overrides them. Any new rule must use `var(--…)` for color — a literal hex will look correct in light mode and break in dark. Note that dark mode **cannot** reuse the brand red `#b10202` (it fails contrast on a dark background), so it swaps in a lightened `--accent` and flips button text to a dark `--accent-on`. The brand red appears exactly twice in the codebase, both as token declarations.
+**Everything is themed through custom properties, and the site is light-only.** `:root` defines the tokens and sets `color-scheme: light`; there is no `prefers-color-scheme: dark` override (it was removed on purpose), and the Turnstile widget is pinned to `theme: "light"`. Any new rule must still use `var(--…)` for color, never a literal hex. The index hero band and the contact panel are intentionally dark blocks on the light page. The brand red `#b10202` appears exactly once in the codebase, as the `--brand` token.
 
 **`site.js` is shared by all pages** and handles the footer year (any `.js-year` element — no per-page IDs), the scroll fade-in and card tilt, and the mobile nav toggle. Page-specific scripts stay inline on their own page (the hero fact graph, visit counter and contact form, all on `index.html`).
 
@@ -68,7 +68,7 @@ Adding a post means appending an `<li>` to `.post-list` in `blog.html` with the 
 - **Cross-page anchors without targets.** `index.html` project cards link to `projects.html#project-N`; those `id`s must exist on the `<article>` elements in `projects.html`.
 - **`<div>` inside `<p>`.** The browser auto-closes the paragraph, silently restructuring the hero.
 - **Unclosed `<main>`** in `index.html`, which pulled the footer and scripts inside the content column.
-- **Hardcoded colors and inline `<style>` blocks**, which broke dark mode and overrode the stylesheet.
+- **Hardcoded colors and inline `<style>` blocks**, which bypassed the theme tokens and overrode the stylesheet.
 - **Stale-read visit counter** — see the CounterAPI note above.
 
 After editing markup, re-check structure and links — there is no linter or CI to catch this:

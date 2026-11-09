@@ -1,15 +1,19 @@
-/* Design tokens. Every color below is themed — never hardcode a hex in a rule
-   or in a page's markup, or dark mode will miss it. */
+/* Design tokens. The site is light-only: there is no dark-mode override, and
+   color-scheme keeps form controls and scrollbars light too. Still never hardcode
+   a hex in a rule or in markup — use these tokens. */
 :root {
+  color-scheme: light;
   --bg: #ffffff;
   --surface: #ffffff;
   --surface-alt: #f7f8fa;
   --text: #111827;
-  --hero-intro: #1f2937;
   --muted: #5b6472;
   --meta: #4b5563;
   --highlight-body: #374151;
-  --highlight-rule: #d1d5db;
+  --timeline-line: #e5e7eb;
+  --timeline-dot-fill: #ffffff;
+  --highlight-card-bg: #f9fafb;
+  --highlight-card-border: #eef0f3;
   --card-title: #14181f;
   --card-text: #374151;
   --pill-neutral-bg: #f3f4f6;
@@ -19,7 +23,8 @@
   --btn-secondary-border: #d1d5db;
   --btn-secondary-hover: #b00000;
   --border: #e5e7eb;
-  --accent: #b10202;
+  --brand: #b10202;
+  --accent: var(--brand);
   --accent-hover: #8e0202;
   --accent-on: #ffffff;
   --accent-soft: rgba(177, 2, 2, 0.08);
@@ -28,60 +33,53 @@
   --shadow: 0 6px 20px rgba(16, 24, 40, 0.06);
   --shadow-lift: 0 14px 30px rgba(16, 24, 40, 0.14);
   --backdrop: rgba(15, 18, 22, 0.55);
-  /* The contact panel is dark in both themes, so dark mode doesn't override these. */
+  /* The contact panel is a deliberate dark block on the light page. */
   --contact-bg: #14181f;
   --contact-text: #ffffff;
   --contact-body: #d1d5db;
   --contact-label: #b6bdc8;
   --contact-hover: #ff8a8a;
   --contact-rule: rgba(255, 255, 255, 0.15);
+  /* The index hero band (and the header over it) is a deliberate dark band too, and its
+     primary button stays brand red: white on --brand passes contrast on any background. */
+  --hero-bg: #111827;
+  --hero-dots: rgba(255, 255, 255, 0.06);
+  --hero-title: #ffffff;
+  /* One hero red: a UNLV-family red that passes AA for large text on --hero-bg. */
+  --hero-accent: #f05252;
+  --hero-title-accent: var(--hero-accent);
+  --hero-stat-label: #9ca3af;
+  --hero-stat-rule: rgba(255, 255, 255, 0.12);
+  --hero-avatar-ring: rgba(255, 255, 255, 0.18);
+  --hero-toggle-border: rgba(255, 255, 255, 0.2);
+  --hero-body: #d1d5db;
+  --hero-chip-bg: rgba(255, 255, 255, 0.08);
+  --hero-chip-text: #e5e7eb;
+  --hero-status: #22c55e;
+  --hero-cta-hover: #991b1b;
+  --hero-ghost-border: rgba(255, 255, 255, 0.28);
+  --hero-photo-border: rgba(255, 255, 255, 0.12);
+  --hero-nav-hover-bg: rgba(255, 255, 255, 0.08);
+  --proof-bg: #ffffff;
+  --proof-text: #111827;
+  --proof-label: #4b5563;
+  --proof-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
+  --header-shadow: 0 2px 12px rgba(16, 24, 40, 0.08);
   /* Type. Display is only for the H1, section H2s, the Contact H2 and project card
      titles; everything else is body. Nothing goes below --text-small. */
   --font-display: 'Inter Tight', 'Inter', Arial, sans-serif;
   --font-body: 'Inter', Arial, sans-serif;
   --text-section: 2rem;
   --text-card-title: 1.375rem;
-  --text-highlight-title: 1.0625rem;
+  --text-highlight-title: 1.125rem;
   --text-body: 1rem;
   --text-meta: 0.875rem;
   --text-small: 0.8125rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1216;
-    --surface: #171b21;
-    --surface-alt: #1d222a;
-    --text: #e8eaed;
-    --hero-intro: #d1d5db;
-    --muted: #a2acba;
-    --meta: #a2acba;
-    --highlight-body: #c4cbd5;
-    --highlight-rule: #4b5563;
-    --card-title: #e8eaed;
-    --card-text: #c4cbd5;
-    --pill-neutral-bg: #2b323b;
-    --tag-text: #ffb4ae;
-    --tag-bg: rgba(255, 106, 96, 0.14);
-    --tag-border: rgba(255, 106, 96, 0.4);
-    --btn-secondary-border: #4b5563;
-    --btn-secondary-hover: #ff6a60;
-    --border: #2b323b;
-    /* The brand red fails contrast on a dark background, so dark mode uses a
-       lightened tint and flips button text to dark. */
-    --accent: #ff6a60;
-    --accent-hover: #ff8a82;
-    --accent-on: #230705;
-    --accent-soft: rgba(255, 106, 96, 0.14);
-    --shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
-    --shadow-lift: 0 14px 30px rgba(0, 0, 0, 0.6);
-    --backdrop: rgba(0, 0, 0, 0.7);
-  }
-}
-
 * { box-sizing: border-box }
 
-/* The hero graph's canvases reach past the page edge on narrow screens. Set on both:
+/* Guards against anything (e.g. the hero proof card's offset) reaching past the page edge. Set on both:
    on body alone it passes to the viewport and becomes hidden, which can still scroll. */
 html { overflow-x: clip }
 
@@ -164,14 +162,19 @@ a { color: var(--accent) }
   flex-direction: column;
   justify-content: center;
   gap: 5px;
+  flex: none;
   width: 44px;
   height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0 10px;
   background: transparent;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
 }
+
+.nav-toggle:focus-visible { outline: 2px solid var(--text); outline-offset: 2px }
 
 .nav-toggle span {
   display: block;
@@ -185,170 +188,232 @@ a { color: var(--accent) }
 .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0 }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg) }
 
-/* hero */
-/* margin-bottom: 0 so the padding alone sets the gap to the next section. */
-.hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(280px, 36vw, 420px);
-  gap: 56px;
-  align-items: center;
-  padding: 56px 0 64px;
-  margin-bottom: 0;
+/* Home header: dark and continuous with the hero band until the inline script on
+   index.html adds .header--scrolled (after 80px), which restores the standard header.
+   The border keeps its 3px so the swap doesn't shift the layout; it just matches the band. */
+.home .site-header {
+  background: var(--hero-bg);
+  border-bottom-color: var(--hero-bg);
+  transition: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
 }
 
-.hero-text h1 {
-  margin: 0 0 1rem 0;
-  font-size: clamp(2.25rem, 5vw, 3.5rem);
-  font-weight: 800;
-  line-height: 1.1;
-  text-wrap: balance;
+.home .site-header .brand-name,
+.home .site-header .brand-tag,
+.home .site-header .nav a { transition: color 200ms ease, background-color 200ms ease }
+
+.home .site-header:not(.header--scrolled) .brand-name { color: var(--hero-title) }
+
+.home .site-header:not(.header--scrolled) .brand-tag { color: var(--hero-body) }
+
+.home .site-header:not(.header--scrolled) .nav a { color: var(--hero-body) }
+
+.home .site-header:not(.header--scrolled) .nav a:hover { color: var(--hero-title); background: var(--hero-nav-hover-bg) }
+
+.home .site-header:not(.header--scrolled) .nav a[aria-current="page"] {
+  color: var(--hero-title);
+  text-decoration: underline 2px var(--brand);
+  text-underline-offset: 6px;
 }
 
-.hero-text p {
-  margin: 0 0 1.75rem 0;
-  max-width: 60ch;
-  font-size: 1.25rem;
-  line-height: 1.55;
-  color: var(--hero-intro);
+.home .site-header:not(.header--scrolled) .nav-toggle { border-color: var(--hero-toggle-border) }
+
+.home .site-header:not(.header--scrolled) .nav-toggle:focus-visible { outline: 2px solid var(--hero-title) }
+
+.home .site-header:not(.header--scrolled) .nav-toggle span { background: var(--hero-title) }
+
+.home .site-header:not(.header--scrolled) :focus-visible { outline-color: var(--hero-title) }
+
+.home .site-header.header--scrolled {
+  background: var(--bg);
+  border-bottom-color: var(--accent);
+  box-shadow: var(--header-shadow);
 }
 
-/* --px and --py run from -1 to 1 and --ring-angle follows the cursor; all three are set
-   by the script on index.html. Without it, these defaults are the static layout. */
-.hero-image { position: relative; isolation: isolate }
-
-/* The padding shows the background through as a ring: accent arc, otherwise --border. */
-.hero-portrait {
-  position: relative;
-  z-index: 10;
-  padding: 6px;
-  border-radius: 50%;
-  background: conic-gradient(
-    from calc(var(--ring-angle, 45deg) - 54deg),
-    var(--accent) 0 30%,
-    var(--border) 30% 100%
-  );
-  box-shadow: var(--shadow-lift);
-  translate: calc(var(--px, 0) * 6px) calc(var(--py, 0) * 6px);
-}
-
-/* Clips inside the ring, so the overscaled photo can't cover it. */
-.hero-portrait-clip { border-radius: 50%; overflow: hidden }
-
-/* Slightly overscaled so the shift never exposes the edge of the photo. */
-.hero-portrait img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: cover;
-  transform: scale(1.06) translate(calc(var(--px, 0) * -8px), calc(var(--py, 0) * -8px));
-}
-
-/* The graph. Stacking inside .hero-image, set by the script on index.html:
-   back edges 1, back nodes 5, portrait 10, front edges 20, front nodes 25, open fact 30. */
-.hero-edges {
-  position: absolute;
-  inset: -60px; /* PAD in the script */
-  width: calc(100% + 120px);
-  height: calc(100% + 120px);
-  pointer-events: none;
-}
-
-.hero-edges-back { z-index: 1 }
-
-.hero-edges-front { z-index: 20 }
-
-.hero-graph { list-style: none; margin: 0; padding: 0 }
-
-/* The button is a 44px hit target around a much smaller visible dot. */
-.graph-node {
+/* Covers the top 80px of the document; the header script watches it leave the viewport. */
+.header-sentinel {
   position: absolute;
   top: 0;
   left: 0;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  will-change: transform;
+  width: 1px;
+  height: 80px;
+  pointer-events: none;
 }
 
-.graph-node:focus-visible { outline: none }
+/* hero: a full-bleed dark band, the same branded frame as the contact panel. */
+.hero--dark {
+  position: relative;
+  isolation: isolate;
+  margin: 0 0 64px 0;
+  background: var(--hero-bg);
+  color: var(--hero-body);
+}
 
-.graph-node:focus-visible .graph-node-body { outline: 2px solid var(--accent); outline-offset: 2px }
-
-.graph-node-body {
+/* Dot grid (inline SVG pattern, 24px spacing) that fades out to the right. */
+.hero-grid {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  display: block;
-  width: 14px;
-  max-height: 14px;
-  overflow: hidden;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  color: var(--hero-dots);
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to right, black 0%, black 25%, transparent 90%);
+  mask-image: linear-gradient(to right, black 0%, black 25%, transparent 90%);
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 64px;
+  align-items: center;
+  padding-block: 88px 72px;
+}
+
+/* The container's own top padding would otherwise add to the 64px below the band. */
+.hero--dark + .container { padding-top: 0 }
+
+.hero-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 24px 0;
+  padding: 6px 12px;
   border-radius: 999px;
-  background: var(--accent);
-  box-shadow: var(--shadow);
-  transition: width 0.25s ease, max-height 0.25s ease, border-radius 0.25s ease, background 0.2s ease;
+  background: var(--hero-chip-bg);
+  color: var(--hero-chip-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
-.graph-node.is-open .graph-node-body {
-  width: 224px;
-  max-height: 200px;
-  border-radius: var(--radius);
-  background: var(--surface);
-  box-shadow: 0 0 0 1px var(--border), var(--shadow-lift);
+.hero-status-dot {
+  position: relative;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hero-status);
 }
 
-/* A fixed width stops the text re-wrapping while the card grows around it. */
-.graph-node-fact {
-  display: block;
-  box-sizing: border-box;
-  width: 224px;
-  padding: 10px 12px;
-  color: var(--text);
-  font-size: var(--text-small);
-  font-weight: 500;
-  line-height: 1.45;
-  text-align: left;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+@media (prefers-reduced-motion: no-preference) {
+  .hero-status-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--hero-status);
+    animation: status-pulse 2s ease-out infinite;
+  }
 }
 
-.graph-node.is-open .graph-node-fact { opacity: 1 }
+@keyframes status-pulse {
+  from { opacity: 0.7; transform: scale(1) }
+  to { opacity: 0; transform: scale(2.75) }
+}
 
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center }
+.hero-title {
+  margin: 0 0 20px 0;
+  font-size: clamp(2.75rem, 6vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--hero-title);
+  text-wrap: balance;
+}
 
-.btn.hero-cta {
+.hero-title-sub { display: block; color: var(--hero-title-accent) }
+
+.hero-intro {
+  margin: 0 0 32px 0;
+  max-width: 36ch;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--hero-body);
+}
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center }
+
+.hero-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   min-height: 52px;
   padding: 0 28px;
+  border: 1px solid transparent;
+  border-radius: 10px;
   font-size: 1.0625rem;
-}
-
-/* inline-block rather than flex so the arrow (also inline-block) stays out of the underline.
-   24px line + 10px padding top and bottom = the 44px tap target. */
-.text-link {
-  display: inline-block;
-  min-height: 44px;
-  padding-block: 10px;
-  line-height: 24px;
   font-weight: 600;
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
-.text-link:hover, .text-link:focus-visible { color: var(--accent-hover); text-decoration-thickness: 2px }
+.hero-btn:focus-visible {
+  outline: 2px solid var(--hero-title);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
 
-.text-link-arrow { display: inline-block; margin-left: 0.35em; transition: transform 0.15s ease }
+.hero-btn--primary { background: var(--brand); border-color: var(--brand); color: var(--hero-title) }
 
-.text-link:hover .text-link-arrow, .text-link:focus-visible .text-link-arrow { transform: translateX(4px) }
+.hero-btn--primary:hover { background: var(--hero-cta-hover); border-color: var(--hero-cta-hover); transform: translateY(-1px) }
+
+.hero-btn-icon { flex: none }
+
+.hero-btn--ghost { background: transparent; border-color: var(--hero-ghost-border); color: var(--hero-title) }
+
+.hero-btn--ghost:hover { border-color: var(--hero-title) }
+
+.hero-media {
+  position: relative;
+  justify-self: end;
+  width: 100%;
+  max-width: 360px;
+}
+
+.hero-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center 20%;
+  border: 1px solid var(--hero-photo-border);
+  border-radius: 20px;
+}
+
+/* Overlaps the photo's bottom-left corner; static below it on small screens. */
+.proof-card {
+  position: absolute;
+  left: -24px;
+  bottom: -24px;
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 16px 18px;
+  list-style: none;
+  background: var(--proof-bg);
+  border-radius: 14px;
+  box-shadow: var(--proof-shadow);
+  color: var(--proof-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.proof-card li { display: flex; align-items: center; gap: 10px; white-space: nowrap }
+
+.proof-icon { flex: none; color: var(--hero-accent) }
+
+/* Mobile-only pieces: on desktop the avatar row collapses to just the status chip
+   and the stat strip is hidden (the proof card carries that content). */
+.hero-top { display: contents }
+
+.hero-avatar,
+.hero-stats { display: none }
+
+.proof-label { color: var(--proof-label); font-weight: 500 }
 
 /* buttons */
 .btn {
@@ -594,41 +659,88 @@ a { color: var(--accent) }
 /* highlights */
 .highlights { padding: 1rem 0 }
 
-/* Columns and column gap match .Recent-Projects .projects-grid. */
-.highlights-track {
+/* Experience on the left, Education & Community card on the right. */
+.highlights-groups {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 40px 24px;
-  align-items: stretch;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 48px;
+}
+
+.highlight-group--card {
+  align-self: start;
+  background: var(--highlight-card-bg);
+  border: 1px solid var(--highlight-card-border);
+  border-radius: 14px;
+  padding: 28px;
+}
+
+.highlight-group-title {
+  margin: 0 0 16px 0;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Vertical timeline: the list's left border is the line, each item's ::before the dot. */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 2px solid var(--timeline-line);
 }
 
 .highlight {
-  border-top: 1px solid var(--highlight-rule);
-  padding-top: 16px;
+  position: relative;
+  padding-left: 28px;
 }
 
-.highlight h3 {
-  margin: 0 0 4px 0;
+.highlight + .highlight { margin-top: 32px }
+
+/* 12px dot centered on the 2px line (1px left of the item's edge) and on the title's first line. */
+.highlight::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: calc((var(--text-highlight-title) * 1.3 - 12px) / 2);
+  box-sizing: border-box;
+  width: 12px;
+  height: 12px;
+  border: 3px solid var(--accent);
+  border-radius: 50%;
+  background: var(--timeline-dot-fill);
+}
+
+.highlight.is-current::before { background: var(--accent) }
+
+.highlight h4 {
+  margin: 0;
   font-family: var(--font-body);
   font-size: var(--text-highlight-title);
-  font-weight: 600;
-  line-height: 1.35;
-  color: var(--card-title);
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--text);
 }
 
-.highlight-meta { margin-bottom: 12px }
-
-.highlight-org, .highlight-date {
-  display: block;
-  font-size: var(--text-meta);
+.highlight-meta {
+  margin: 8px 0 0 0;
+  font-size: 0.9rem;
   font-weight: 500;
   line-height: 1.4;
   color: var(--meta);
 }
 
-.highlight-date { white-space: nowrap }
+.highlight-date { font-variant-numeric: tabular-nums; white-space: nowrap }
 
-.highlight p { margin: 0; color: var(--highlight-body); font-size: var(--text-body); line-height: 1.6 }
+.highlight-body {
+  margin: 10px 0 0 0;
+  max-width: 60ch;
+  font-size: var(--text-body);
+  line-height: 1.65;
+  color: var(--highlight-body);
+}
 
 /* sections */
 section { margin-bottom: 2.5rem }
@@ -644,59 +756,242 @@ h2 { margin: 0 0 1rem 0 }
   letter-spacing: -0.01em;
 }
 
-/* about */
-/* Matches the visual gap above Highlights: its 1rem top padding plus the 2.5rem section margin. */
-.about-section { margin-bottom: 3.5rem }
+/* about — a tinted panel with two halves: story chapters (tabs, built by an inline
+   script on index.html) and a photo stack you can shuffle. Without JS the chapters
+   simply stack and the photos sit side by side. */
+.about-section {
+  position: relative;
+  margin-bottom: 3.5rem;
+  padding: 48px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background-color: var(--surface-alt);
+  background-image:
+    radial-gradient(circle at 100% 0%, var(--accent-soft), transparent 45%),
+    radial-gradient(var(--border) 1px, transparent 1.5px);
+  background-size: auto, 22px 22px;
+  overflow: clip;
+}
 
 .about-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  column-gap: 40px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  column-gap: 56px;
+  align-items: center;
 }
 
-.about-text p { margin: 0; max-width: 60ch }
+/* tabs */
+.about-tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 28px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
 
-.about-text p:first-child {
-  font-size: 1.25rem;
-  font-weight: 500;
-  line-height: 1.5;
+.about-tabs[hidden] { display: none }
+
+.about-tabs button {
+  font: inherit;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.about-tabs button:hover { color: var(--text) }
+
+.about-tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-on) }
+
+.about-tabs button:focus-visible,
+.photo-shuffle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* chapters */
+.about-chapter + .about-chapter { margin-top: 32px }
+
+/* With tabs, every chapter shares one grid cell so the panel keeps the height of the
+   tallest chapter and doesn't jump when switching. */
+.is-enhanced .about-chapters { display: grid }
+
+.is-enhanced .about-chapter { grid-area: 1 / 1; margin-top: 0 }
+
+.is-enhanced .about-chapter[hidden] { display: block; visibility: hidden }
+
+.about-num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--accent);
+}
+
+.about-chapter h3 {
+  margin: 10px 0 12px;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   color: var(--text);
 }
 
-.about-text p + p {
-  margin-top: 16px;
+.about-chapter p {
+  margin: 0;
+  max-width: 56ch;
   font-size: 1.0625rem;
-  line-height: 1.65;
+  line-height: 1.7;
   color: var(--highlight-body);
 }
 
+.about-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-chips li {
+  padding: 4px 12px;
+  border: 1px solid var(--tag-border);
+  border-radius: 999px;
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  font-size: var(--text-meta);
+  font-weight: 600;
+}
+
+.about-chips a { color: inherit; text-decoration: none }
+
+.about-chips a:hover { text-decoration: underline }
+
+.about-chapter .about-cta { margin-top: 22px }
+
+/* photo stack */
 .about-photos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.photo-stack {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+  width: 100%;
 }
 
-.about-photos img {
+.photo-card {
+  margin: 0;
+  padding: 10px 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: var(--shadow-lift);
+}
+
+.photo-card img {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
-  border-radius: 12px;
-  border: 1px solid var(--border);
+  border-radius: 8px;
 }
 
-/* Both photos are portrait, so these pick the slice that keeps every face in frame,
-   at both the 4:5 desktop crop and the 1:1 crop below 900px. */
+/* Both photos are portrait, so these pick the slice that keeps every face in frame. */
 .about-photo-dad { object-position: 50% 58% }
 
 .about-photo-mom { object-position: 50% 20% }
 
-.about-photos figcaption {
-  margin-top: 8px;
-  font-size: 0.9375rem;
+.photo-card figcaption {
+  margin-top: 10px;
+  text-align: center;
+  font-size: var(--text-meta);
   font-weight: 500;
   color: var(--highlight-body);
+}
+
+/* Enhanced: one deck of tilted prints. The last card in the DOM is on top. */
+.is-enhanced .photo-stack {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 340px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.is-enhanced .photo-card {
+  grid-area: 1 / 1;
+  transition: transform 0.35s ease;
+}
+
+.is-enhanced .photo-card:first-child { transform: translate(22px, 8px) rotate(6deg) }
+
+.is-enhanced .photo-card:last-child { transform: rotate(-3deg) }
+
+.is-enhanced .photo-stack:hover .photo-card:first-child { transform: translate(44px, 0) rotate(10deg) }
+
+.is-enhanced .photo-stack:hover .photo-card:last-child { transform: translate(-10px, -6px) rotate(-5deg) }
+
+.photo-shuffle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.photo-shuffle[hidden] { display: none }
+
+.photo-shuffle:hover { border-color: var(--accent); color: var(--accent) }
+
+@media (prefers-reduced-motion: no-preference) {
+  .is-enhanced .about-chapter:not([hidden]) { animation: chapter-in 0.4s ease both }
+
+  .is-shuffling .photo-card:first-child { animation: photo-to-back 0.55s ease }
+
+  .is-shuffling .photo-card:last-child { animation: photo-to-front 0.55s ease }
+}
+
+@keyframes chapter-in {
+  from { opacity: 0; translate: 0 10px }
+}
+
+/* The old top card is tossed out to the left and lands at the back... */
+@keyframes photo-to-back {
+  0% { transform: rotate(-3deg) }
+  45% { transform: translate(-70%, -4%) rotate(-14deg) }
+  100% { transform: translate(22px, 8px) rotate(6deg) }
+}
+
+/* ...while the card underneath rises into its place. */
+@keyframes photo-to-front {
+  from { transform: translate(22px, 8px) rotate(6deg) scale(0.96) }
+  to { transform: rotate(-3deg) }
 }
 
 /* posts */
@@ -870,16 +1165,23 @@ pre { background: #0f172a; color: #e6eef8; padding: 1rem; border-radius: 6px; ov
 
 /* responsive */
 @media (max-width: 899.98px) {
-  .highlights-track { grid-template-columns: repeat(2, minmax(0, 1fr)) }
+  .about-grid { grid-template-columns: minmax(0, 1fr); row-gap: 40px }
 
-  .about-grid { grid-template-columns: minmax(0, 1fr); row-gap: 24px }
-
-  .about-text p:first-child { font-size: 1.1875rem }
-
-  .about-photos img { aspect-ratio: 1 / 1 }
+  .is-enhanced .photo-stack { max-width: 300px }
 }
 
 @media (max-width: 760px) {
+  .about-section { padding: 28px 18px 32px; border-radius: 16px }
+
+  /* Two rows of two, so the four tabs never overflow a phone screen. */
+  .about-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; border-radius: 16px }
+
+  .about-tabs button { border-radius: 12px; padding: 10px 8px }
+
+  .about-num { font-size: 3.5rem }
+
+  .about-chapter h3 { font-size: 1.5rem }
+
   .nav-toggle { display: flex }
 
   .site-nav {
@@ -893,6 +1195,8 @@ pre { background: #0f172a; color: #e6eef8; padding: 1rem; border-radius: 6px; ov
 
   .nav a { padding: 0.7rem 0.5rem; border-bottom: 1px solid var(--border) }
 
+  .home .site-header:not(.header--scrolled) .nav a { border-bottom-color: var(--hero-photo-border) }
+
   .brand-logo { height: 40px }
 
   .brand-name { font-size: 1rem }
@@ -901,21 +1205,70 @@ pre { background: #0f172a; color: #e6eef8; padding: 1rem; border-radius: 6px; ov
 @media (max-width: 720px) {
   :root { --text-section: 1.75rem; --text-card-title: 1.25rem }
 
-  .hero { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 24px 0 48px }
+  .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 0; padding-block: 28px 40px }
 
-  /* The text comes first in the source; only the visual order puts the photo on top. */
-  .hero-image { order: -1 }
+  /* Text first; the big portrait and floating proof card leave the mobile flow, replaced
+     by the avatar row and the stat strip so the name and résumé button stay above the fold. */
+  .hero-text { order: -1 }
 
-  .hero-portrait { width: min(240px, 70vw); margin: 0 auto }
+  .hero-media { display: none }
 
-  /* Room for the orbit above and below the photo. */
-  .hero-image { margin: 28px 0 }
+  .hero-top { display: flex; align-items: center; gap: 12px }
 
-  .hero-text h1 { font-size: 2.25rem }
+  .hero-avatar {
+    display: block;
+    flex: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 20%;
+    box-shadow: 0 0 0 2px var(--hero-avatar-ring);
+  }
 
-  .hero-text p { font-size: 1.125rem }
+  .hero-status { margin: 0 }
 
-  .btn.hero-cta { width: 100% }
+  .hero-title {
+    margin: 16px 0 0 0;
+    font-size: clamp(2.5rem, 11vw, 3rem);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+  }
+
+  .hero-intro { margin: 16px 0 28px 0; font-size: 1.0625rem; line-height: 1.6; color: var(--hero-body) }
+
+  .hero-actions { flex-direction: column; align-items: stretch; gap: 4px }
+
+  .hero-btn { width: 100% }
+
+  /* Secondary CTA drops to a text link so the résumé button is clearly the main action. */
+  .hero-btn--ghost {
+    min-height: 48px;
+    padding: 0 16px;
+    border: none;
+    background: transparent;
+    color: var(--hero-title);
+    font-weight: 600;
+  }
+
+  .hero-btn--ghost:hover,
+  .hero-btn--ghost:focus-visible { text-decoration: underline; text-underline-offset: 4px }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 24px 0 0 0;
+    padding: 16px 0 0 0;
+    list-style: none;
+    border-top: 1px solid var(--hero-stat-rule);
+  }
+
+  .hero-stats li { display: flex; flex-direction: column; gap: 2px; min-width: 0 }
+
+  .hero-stat-value { font-size: 0.95rem; font-weight: 700; color: var(--hero-title); line-height: 1.3 }
+
+  .hero-stat-label { font-size: 0.75rem; color: var(--hero-stat-label); line-height: 1.35 }
 
   .contact { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 28px }
 
@@ -925,15 +1278,16 @@ pre { background: #0f172a; color: #e6eef8; padding: 1rem; border-radius: 6px; ov
 
   .Recent-Projects .card-actions a { flex: 1 }
 
-  .highlights-track { grid-template-columns: minmax(0, 1fr); row-gap: 24px }
+  /* One column, Experience first (source order). */
+  .highlights-groups { grid-template-columns: minmax(0, 1fr) }
 
-  /* Organization and date share a line only when both fit. */
-  .highlight-meta { display: flex; flex-wrap: wrap; column-gap: 16px }
+  .highlight + .highlight { margin-top: 24px }
+
+  .highlight-group--card { padding: 28px 20px }
 }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important }
-  .card:hover, .post-list li:hover, .btn:hover { transform: none }
+  .card:hover, .post-list li:hover, .btn:hover, .hero-btn:hover { transform: none }
   .contact-row:hover .contact-arrow, .contact-row:focus-visible .contact-arrow { transform: none }
-  .text-link:hover .text-link-arrow, .text-link:focus-visible .text-link-arrow { transform: none }
 }
