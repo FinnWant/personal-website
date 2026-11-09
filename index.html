@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&amp;family=Inter+Tight:wght@700;800&amp;display=swap" />
-  <link rel="stylesheet" href="styles.css?v=25" />
+  <link rel="stylesheet" href="styles.css?v=27" />
 </head>
 
 <body class="home">
@@ -82,7 +82,7 @@
           <ul class="hero-stats" aria-label="At a glance">
             <li><span class="hero-stat-value">CRA</span><span class="hero-stat-label">Research asst.</span></li>
             <li><span class="hero-stat-value">UNLV ’27</span><span class="hero-stat-label">B.S. CS</span></li>
-            <li><span class="hero-stat-value">600+</span><span class="hero-stat-label">Episodes labeled</span></li>
+            <li><span class="hero-stat-value">Dean’s List</span><span class="hero-stat-label">Spring ’24 &amp; ’26</span></li>
           </ul>
         </div>
         <div class="hero-media">
@@ -105,9 +105,9 @@
             <li>
               <svg class="proof-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 14v-2a9 9 0 0 1 18 0v2" /><path d="M21 15a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2Z" /><path d="M3 15a2 2 0 0 0 2 2h1v-6H5a2 2 0 0 0-2 2Z" />
+                <circle cx="12" cy="8" r="6" /><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5" />
               </svg>
-              <span>600+ <span class="proof-label">episodes labeled</span></span>
+              <span>Dean’s List <span class="proof-label">· Spring 2024 &amp; 2026</span></span>
             </li>
           </ul>
         </div>
@@ -226,24 +226,79 @@
       </div>
     </section>
 
-    <section class="about-section">
-      <h2>About Me</h2>
+    <section class="about-section" aria-labelledby="about-title">
+      <h2 id="about-title">About Me</h2>
       <div class="about-grid">
-        <div class="about-text">
-          <p>I fell in love with coding and AI my freshman year at UNLV, when my cousin Greg introduced me to Python. I
-            knew right away this was my calling, and I've enjoyed every minute since.</p>
-          <p>Now I'm looking for internships and entry-level roles in software or AI/ML engineering. Reach out below,
-            and thanks for visiting!</p>
+        <div class="about-story">
+          <!-- Tabs are built by the inline script below; without JS every chapter shows in order. -->
+          <div class="about-tabs" role="tablist" aria-label="About me, in chapters" hidden>
+            <button type="button" role="tab" id="about-tab-1" aria-controls="about-ch-1">The spark</button>
+            <button type="button" role="tab" id="about-tab-2" aria-controls="about-ch-2">Right now</button>
+            <button type="button" role="tab" id="about-tab-3" aria-controls="about-ch-3">For fun</button>
+            <button type="button" role="tab" id="about-tab-4" aria-controls="about-ch-4">What’s next</button>
+          </div>
+
+          <div class="about-chapters">
+          <div class="about-chapter" id="about-ch-1" role="tabpanel" aria-labelledby="about-tab-1">
+            <span class="about-num" aria-hidden="true">01</span>
+            <h3>It started with Python</h3>
+            <p>I fell in love with coding and AI my freshman year at UNLV, when my cousin Greg introduced me to
+              Python. I knew right away this was my calling, and I’ve enjoyed every minute since.</p>
+          </div>
+
+          <div class="about-chapter" id="about-ch-2" role="tabpanel" aria-labelledby="about-tab-2">
+            <span class="about-num" aria-hidden="true">02</span>
+            <h3>Building, researching, teaching</h3>
+            <p>I’m a senior in Computer Science at UNLV. I simulate traffic intersections as a research assistant,
+              sit in on client calls at MoFlo, and spent the last year teaching kids to build games in Unity and
+              Godot.</p>
+            <ul class="about-chips" aria-label="Current roles">
+              <li>Research Assistant · CRA</li>
+              <li>Customer Success · MoFlo</li>
+              <li>Dean’s List ×2</li>
+            </ul>
+          </div>
+
+          <div class="about-chapter" id="about-ch-3" role="tabpanel" aria-labelledby="about-tab-3">
+            <span class="about-num" aria-hidden="true">03</span>
+            <h3>I build what I’m into</h3>
+            <p>My side projects come straight from my hobbies: an army builder for Warhammer 40k, a football
+              simulator that runs on player stats, and a couple of Pokémon-inspired games.</p>
+            <ul class="about-chips" aria-label="Hobby projects">
+              <li><a href="projects.html#project-2">Warhammer 40k</a></li>
+              <li><a href="projects.html#project-4">Football</a></li>
+              <li><a href="projects.html#project-1">Pokémon</a></li>
+            </ul>
+          </div>
+
+          <div class="about-chapter" id="about-ch-4" role="tabpanel" aria-labelledby="about-tab-4">
+            <span class="about-num" aria-hidden="true">04</span>
+            <h3>Looking for my next team</h3>
+            <p>I’m looking for internships and entry-level roles in software or AI/ML engineering. If that sounds
+              like your team, I’d love to hear from you — and thanks for visiting!</p>
+            <p class="about-cta"><a class="btn" href="#contact">Get in touch</a></p>
+          </div>
+          </div>
         </div>
+
         <div class="about-photos">
-          <figure style="margin:0">
-            <img class="about-photo-dad" src="Images/MEandDAD.jpg" alt="Finnagin Wantland with his dad" />
-            <figcaption>On the course</figcaption>
-          </figure>
-          <figure style="margin:0">
-            <img class="about-photo-mom" src="Images/MEandMOM.jpg" alt="Finnagin Wantland with his mom" />
-            <figcaption>Game day at UNLV</figcaption>
-          </figure>
+          <div class="photo-stack" data-stack>
+            <figure class="photo-card">
+              <img class="about-photo-dad" src="Images/MEandDAD.jpg" alt="Finnagin Wantland with his dad" />
+              <figcaption>On the course with my dad</figcaption>
+            </figure>
+            <figure class="photo-card">
+              <img class="about-photo-mom" src="Images/MEandMOM.jpg" alt="Finnagin Wantland with his mom" />
+              <figcaption>Game day at UNLV with my mom</figcaption>
+            </figure>
+          </div>
+          <button type="button" class="photo-shuffle" hidden>
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 3h5v5" /><path d="M4 20 21 3" /><path d="M21 16v5h-5" /><path d="m15 15 6 6" /><path d="M4 4l5 5" />
+            </svg>
+            Shuffle photos
+          </button>
         </div>
       </div>
     </section>
@@ -369,7 +424,7 @@
         status.textContent = "";
         widgetId = window.turnstile.render("#contact-turnstile", {
           sitekey: TURNSTILE_SITE_KEY,
-          theme: window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
+          theme: "light",
           "error-callback": (code) => {
             console.error("Turnstile error", code);
             status.textContent = `Captcha failed to load (error ${code}).`;
@@ -471,6 +526,56 @@
         countEl.textContent = "unavailable";
         console.error(err);
       }
+    })();
+  </script>
+  <script>
+    // About Me: chapter tabs and the shuffleable photo stack. Both are progressive
+    // enhancements — without this script every chapter and both photos just show.
+    (() => {
+      const section = document.querySelector(".about-section");
+      if (!section) return;
+      section.classList.add("is-enhanced");
+
+      const tablist = section.querySelector(".about-tabs");
+      const tabs = [...tablist.querySelectorAll('[role="tab"]')];
+      const panels = tabs.map((t) => document.getElementById(t.getAttribute("aria-controls")));
+      tablist.hidden = false;
+
+      const select = (i, focus) => {
+        tabs.forEach((t, j) => {
+          const on = i === j;
+          t.setAttribute("aria-selected", String(on));
+          t.tabIndex = on ? 0 : -1;
+          panels[j].hidden = !on;
+        });
+        if (focus) tabs[i].focus();
+      };
+      tabs.forEach((t, i) => t.addEventListener("click", () => select(i, false)));
+      // Arrow keys move between tabs, per the ARIA tabs pattern.
+      tablist.addEventListener("keydown", (e) => {
+        const i = tabs.indexOf(document.activeElement);
+        const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+        if (i < 0) return;
+        if (step) select((i + step + tabs.length) % tabs.length, true);
+        else if (e.key === "Home") select(0, true);
+        else if (e.key === "End") select(tabs.length - 1, true);
+        else return;
+        e.preventDefault();
+      });
+      select(0, false);
+
+      // Photo stack: the last card is on top; shuffling moves the top card to the back.
+      const stack = section.querySelector("[data-stack]");
+      const shuffle = section.querySelector(".photo-shuffle");
+      shuffle.hidden = false;
+      const next = () => {
+        stack.prepend(stack.lastElementChild);
+        stack.classList.remove("is-shuffling");
+        void stack.offsetWidth; // restart the animation
+        stack.classList.add("is-shuffling");
+      };
+      stack.addEventListener("click", next);
+      shuffle.addEventListener("click", next);
     })();
   </script>
 </body>

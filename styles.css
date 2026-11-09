@@ -1,6 +1,8 @@
-/* Design tokens. Every color below is themed — never hardcode a hex in a rule
-   or in a page's markup, or dark mode will miss it. */
+/* Design tokens. The site is light-only: there is no dark-mode override, and
+   color-scheme keeps form controls and scrollbars light too. Still never hardcode
+   a hex in a rule or in markup — use these tokens. */
 :root {
+  color-scheme: light;
   --bg: #ffffff;
   --surface: #ffffff;
   --surface-alt: #f7f8fa;
@@ -31,14 +33,14 @@
   --shadow: 0 6px 20px rgba(16, 24, 40, 0.06);
   --shadow-lift: 0 14px 30px rgba(16, 24, 40, 0.14);
   --backdrop: rgba(15, 18, 22, 0.55);
-  /* The contact panel is dark in both themes, so dark mode doesn't override these. */
+  /* The contact panel is a deliberate dark block on the light page. */
   --contact-bg: #14181f;
   --contact-text: #ffffff;
   --contact-body: #d1d5db;
   --contact-label: #b6bdc8;
   --contact-hover: #ff8a8a;
   --contact-rule: rgba(255, 255, 255, 0.15);
-  /* The index hero band (and the header over it) is dark in both themes too, and its
+  /* The index hero band (and the header over it) is a deliberate dark band too, and its
      primary button stays brand red: white on --brand passes contrast on any background. */
   --hero-bg: #111827;
   --hero-dots: rgba(255, 255, 255, 0.06);
@@ -73,40 +75,6 @@
   --text-body: 1rem;
   --text-meta: 0.875rem;
   --text-small: 0.8125rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1216;
-    --surface: #171b21;
-    --surface-alt: #1d222a;
-    --text: #e8eaed;
-    --muted: #a2acba;
-    --meta: #a2acba;
-    --highlight-body: #c4cbd5;
-    --timeline-line: #2b323b;
-    --timeline-dot-fill: #0f1216;
-    --highlight-card-bg: #1d222a;
-    --highlight-card-border: #2b323b;
-    --card-title: #e8eaed;
-    --card-text: #c4cbd5;
-    --pill-neutral-bg: #2b323b;
-    --tag-text: #ffb4ae;
-    --tag-bg: rgba(255, 106, 96, 0.14);
-    --tag-border: rgba(255, 106, 96, 0.4);
-    --btn-secondary-border: #4b5563;
-    --btn-secondary-hover: #ff6a60;
-    --border: #2b323b;
-    /* The brand red fails contrast on a dark background, so dark mode uses a
-       lightened tint and flips button text to dark. */
-    --accent: #ff6a60;
-    --accent-hover: #ff8a82;
-    --accent-on: #230705;
-    --accent-soft: rgba(255, 106, 96, 0.14);
-    --shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
-    --shadow-lift: 0 14px 30px rgba(0, 0, 0, 0.6);
-    --backdrop: rgba(0, 0, 0, 0.7);
-  }
 }
 
 * { box-sizing: border-box }
@@ -788,59 +756,242 @@ h2 { margin: 0 0 1rem 0 }
   letter-spacing: -0.01em;
 }
 
-/* about */
-/* Matches the visual gap above Highlights: its 1rem top padding plus the 2.5rem section margin. */
-.about-section { margin-bottom: 3.5rem }
+/* about — a tinted panel with two halves: story chapters (tabs, built by an inline
+   script on index.html) and a photo stack you can shuffle. Without JS the chapters
+   simply stack and the photos sit side by side. */
+.about-section {
+  position: relative;
+  margin-bottom: 3.5rem;
+  padding: 48px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background-color: var(--surface-alt);
+  background-image:
+    radial-gradient(circle at 100% 0%, var(--accent-soft), transparent 45%),
+    radial-gradient(var(--border) 1px, transparent 1.5px);
+  background-size: auto, 22px 22px;
+  overflow: clip;
+}
 
 .about-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  column-gap: 40px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  column-gap: 56px;
+  align-items: center;
 }
 
-.about-text p { margin: 0; max-width: 60ch }
+/* tabs */
+.about-tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 28px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
 
-.about-text p:first-child {
-  font-size: 1.25rem;
-  font-weight: 500;
-  line-height: 1.5;
+.about-tabs[hidden] { display: none }
+
+.about-tabs button {
+  font: inherit;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.about-tabs button:hover { color: var(--text) }
+
+.about-tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-on) }
+
+.about-tabs button:focus-visible,
+.photo-shuffle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* chapters */
+.about-chapter + .about-chapter { margin-top: 32px }
+
+/* With tabs, every chapter shares one grid cell so the panel keeps the height of the
+   tallest chapter and doesn't jump when switching. */
+.is-enhanced .about-chapters { display: grid }
+
+.is-enhanced .about-chapter { grid-area: 1 / 1; margin-top: 0 }
+
+.is-enhanced .about-chapter[hidden] { display: block; visibility: hidden }
+
+.about-num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--accent);
+}
+
+.about-chapter h3 {
+  margin: 10px 0 12px;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   color: var(--text);
 }
 
-.about-text p + p {
-  margin-top: 16px;
+.about-chapter p {
+  margin: 0;
+  max-width: 56ch;
   font-size: 1.0625rem;
-  line-height: 1.65;
+  line-height: 1.7;
   color: var(--highlight-body);
 }
 
+.about-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-chips li {
+  padding: 4px 12px;
+  border: 1px solid var(--tag-border);
+  border-radius: 999px;
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  font-size: var(--text-meta);
+  font-weight: 600;
+}
+
+.about-chips a { color: inherit; text-decoration: none }
+
+.about-chips a:hover { text-decoration: underline }
+
+.about-chapter .about-cta { margin-top: 22px }
+
+/* photo stack */
 .about-photos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.photo-stack {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+  width: 100%;
 }
 
-.about-photos img {
+.photo-card {
+  margin: 0;
+  padding: 10px 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: var(--shadow-lift);
+}
+
+.photo-card img {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
-  border-radius: 12px;
-  border: 1px solid var(--border);
+  border-radius: 8px;
 }
 
-/* Both photos are portrait, so these pick the slice that keeps every face in frame,
-   at both the 4:5 desktop crop and the 1:1 crop below 900px. */
+/* Both photos are portrait, so these pick the slice that keeps every face in frame. */
 .about-photo-dad { object-position: 50% 58% }
 
 .about-photo-mom { object-position: 50% 20% }
 
-.about-photos figcaption {
-  margin-top: 8px;
-  font-size: 0.9375rem;
+.photo-card figcaption {
+  margin-top: 10px;
+  text-align: center;
+  font-size: var(--text-meta);
   font-weight: 500;
   color: var(--highlight-body);
+}
+
+/* Enhanced: one deck of tilted prints. The last card in the DOM is on top. */
+.is-enhanced .photo-stack {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 340px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.is-enhanced .photo-card {
+  grid-area: 1 / 1;
+  transition: transform 0.35s ease;
+}
+
+.is-enhanced .photo-card:first-child { transform: translate(22px, 8px) rotate(6deg) }
+
+.is-enhanced .photo-card:last-child { transform: rotate(-3deg) }
+
+.is-enhanced .photo-stack:hover .photo-card:first-child { transform: translate(44px, 0) rotate(10deg) }
+
+.is-enhanced .photo-stack:hover .photo-card:last-child { transform: translate(-10px, -6px) rotate(-5deg) }
+
+.photo-shuffle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.photo-shuffle[hidden] { display: none }
+
+.photo-shuffle:hover { border-color: var(--accent); color: var(--accent) }
+
+@media (prefers-reduced-motion: no-preference) {
+  .is-enhanced .about-chapter:not([hidden]) { animation: chapter-in 0.4s ease both }
+
+  .is-shuffling .photo-card:first-child { animation: photo-to-back 0.55s ease }
+
+  .is-shuffling .photo-card:last-child { animation: photo-to-front 0.55s ease }
+}
+
+@keyframes chapter-in {
+  from { opacity: 0; translate: 0 10px }
+}
+
+/* The old top card is tossed out to the left and lands at the back... */
+@keyframes photo-to-back {
+  0% { transform: rotate(-3deg) }
+  45% { transform: translate(-70%, -4%) rotate(-14deg) }
+  100% { transform: translate(22px, 8px) rotate(6deg) }
+}
+
+/* ...while the card underneath rises into its place. */
+@keyframes photo-to-front {
+  from { transform: translate(22px, 8px) rotate(6deg) scale(0.96) }
+  to { transform: rotate(-3deg) }
 }
 
 /* posts */
@@ -1014,14 +1165,23 @@ pre { background: #0f172a; color: #e6eef8; padding: 1rem; border-radius: 6px; ov
 
 /* responsive */
 @media (max-width: 899.98px) {
-  .about-grid { grid-template-columns: minmax(0, 1fr); row-gap: 24px }
+  .about-grid { grid-template-columns: minmax(0, 1fr); row-gap: 40px }
 
-  .about-text p:first-child { font-size: 1.1875rem }
-
-  .about-photos img { aspect-ratio: 1 / 1 }
+  .is-enhanced .photo-stack { max-width: 300px }
 }
 
 @media (max-width: 760px) {
+  .about-section { padding: 28px 18px 32px; border-radius: 16px }
+
+  /* Two rows of two, so the four tabs never overflow a phone screen. */
+  .about-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; border-radius: 16px }
+
+  .about-tabs button { border-radius: 12px; padding: 10px 8px }
+
+  .about-num { font-size: 3.5rem }
+
+  .about-chapter h3 { font-size: 1.5rem }
+
   .nav-toggle { display: flex }
 
   .site-nav {
