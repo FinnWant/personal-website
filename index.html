@@ -23,8 +23,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Inter+Tight:wght@700;800&amp;display=swap" />
-  <link rel="stylesheet" href="styles.css?v=22" />
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&amp;family=Inter+Tight:wght@700;800&amp;display=swap" />
+  <link rel="stylesheet" href="styles.css?v=23" />
 </head>
 
 <body>
@@ -144,60 +144,54 @@
 
     <section class="highlights">
       <h2>Highlights</h2>
-      <div class="highlights-track">
-        <article class="highlight">
-          <h3>Undergraduate Research Assistant</h3>
-          <div class="highlight-meta">
-            <span class="highlight-org">Computing Research Association</span>
-            <span class="highlight-date">May 2026 – Present</span>
-          </div>
-          <p>Building simulations of signalized intersections to test adaptive traffic-signal timing, measuring
-            vehicle delay, queue length, and throughput.</p>
-        </article>
-        <article class="highlight">
-          <h3>Customer Success Intern</h3>
-          <div class="highlight-meta">
-            <span class="highlight-org">MoFlo</span>
-            <span class="highlight-date">Aug 2026 – Present</span>
-          </div>
-          <p>About 9 client meetings a week — logging feedback and feature requests, and flagging bugs to engineering
-            with clear repro steps.</p>
-        </article>
-        <article class="highlight">
-          <h3>Coding Coach</h3>
-          <div class="highlight-meta">
-            <span class="highlight-org">The Coder School</span>
-            <span class="highlight-date">Dec 2025 – Aug 2026</span>
-          </div>
-          <p>Mentored ~12 young coders a week, teaching object-oriented game development in Unity and Godot.</p>
-        </article>
-        <article class="highlight">
-          <h3>MFMVault.com</h3>
-          <div class="highlight-meta">
-            <span class="highlight-org">Data Collector &amp; Curator</span>
-            <span class="highlight-date">Freelance</span>
-          </div>
-          <p>Labeled speakers across 600+ My First Million episodes and built out 200+ guest profiles for a live
-            production site.</p>
-        </article>
-        <article class="highlight">
-          <h3>B.S. Computer Science</h3>
-          <div class="highlight-meta">
-            <span class="highlight-org">University of Nevada, Las Vegas</span>
-            <span class="highlight-date">Expected May 2027</span>
-          </div>
-          <p>Dean's List in Spring 2024 and Spring 2026, with coursework in algorithms, data structures and
-            programming languages. NSLS member.</p>
-        </article>
-        <article class="highlight">
-          <h3>AI Engineer World's Fair</h3>
-          <div class="highlight-meta">
-            <span class="highlight-org">Volunteer</span>
-            <span class="highlight-date">San Francisco</span>
-          </div>
-          <p>Volunteered at the AI Engineer World's Fair, meeting engineers and teams building with AI in production.
-          </p>
-        </article>
+      <div class="highlights-groups">
+        <div class="highlight-group">
+          <h3 class="highlight-group-title">Experience</h3>
+          <!-- .is-current marks roles that run to Present; they get a solid dot. -->
+          <ul class="timeline">
+            <li class="highlight is-current">
+              <h4>Undergraduate Research Assistant</h4>
+              <p class="highlight-meta">Computing Research Association<span class="highlight-sep" aria-hidden="true"> · </span><span class="highlight-date">May 2026 – Present</span></p>
+              <p class="highlight-body">Building simulations of signalized intersections to test adaptive traffic-signal
+                timing, measuring vehicle delay, queue length, and throughput.</p>
+            </li>
+            <li class="highlight is-current">
+              <h4>Customer Success Intern</h4>
+              <p class="highlight-meta">MoFlo<span class="highlight-sep" aria-hidden="true"> · </span><span class="highlight-date">Aug 2026 – Present</span></p>
+              <p class="highlight-body">About 9 client meetings a week — logging feedback and feature requests, and
+                flagging bugs to engineering with clear repro steps.</p>
+            </li>
+            <li class="highlight">
+              <h4>Coding Coach</h4>
+              <p class="highlight-meta">The Coder School<span class="highlight-sep" aria-hidden="true"> · </span><span class="highlight-date">Dec 2025 – Aug 2026</span></p>
+              <p class="highlight-body">Mentored ~12 young coders a week, teaching object-oriented game development in
+                Unity and Godot.</p>
+            </li>
+            <li class="highlight">
+              <h4>MFMVault.com</h4>
+              <p class="highlight-meta">Data Collector &amp; Curator<span class="highlight-sep" aria-hidden="true"> · </span><span class="highlight-date">Freelance</span></p>
+              <p class="highlight-body">Labeled speakers across 600+ My First Million episodes and built out 200+ guest
+                profiles for a live production site.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="highlight-group highlight-group--card">
+          <h3 class="highlight-group-title">Education &amp; Community</h3>
+          <ul class="timeline">
+            <li class="highlight">
+              <h4>B.S. Computer Science</h4>
+              <p class="highlight-meta">University of Nevada, Las Vegas<span class="highlight-sep" aria-hidden="true"> · </span><span class="highlight-date">Expected May 2027</span></p>
+              <p class="highlight-body">Dean's List in Spring 2024 and Spring 2026, with coursework in algorithms, data
+                structures and programming languages. NSLS member.</p>
+            </li>
+            <li class="highlight">
+              <h4>AI Engineer World's Fair</h4>
+              <p class="highlight-meta">Volunteer<span class="highlight-sep" aria-hidden="true"> · </span><span class="highlight-date">San Francisco</span></p>
+              <p class="highlight-body">Volunteered at the AI Engineer World's Fair, meeting engineers and teams building
+                with AI in production.</p>
+            </li>
+          </ul>
+        </div>
       </div>
     </section>
 
