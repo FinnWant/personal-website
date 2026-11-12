@@ -1,6 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="FW">
-  <rect width="64" height="64" rx="14" fill="#B10202"/>
-  <text x="32" y="44" text-anchor="middle"
-        font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-        font-size="30" font-weight="700" fill="#ffffff">FW</text>
+  <!-- Static FW git-graph mark; the animated copy is inline in each page's header. -->
+  <rect width="64" height="64" rx="14" fill="#111827"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 48V16"/>
+    <path d="M13 39c0-5 2.5-7 7-7h2"/>
+    <path d="M13 26c0-6 3-8 9-8h5L32.5 47 38 30l5.5 17L49 18"/>
+  </g>
+  <g fill="#FFFFFF">
+    <circle cx="13" cy="47" r="3.6"/>
+    <circle cx="22.5" cy="32" r="3.6"/>
+    <circle cx="27" cy="18" r="3.6"/>
+  </g>
+  <circle cx="49" cy="18" r="4.4" fill="#F05252"/>
+  <circle cx="49" cy="18" r="1.6" fill="#111827"/>
 </svg>
