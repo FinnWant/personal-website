@@ -22,16 +22,31 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Inter+Tight:wght@700;800&amp;display=swap" />
-  <link rel="stylesheet" href="styles.css?v=27" />
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&amp;family=Inter+Tight:wght@700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" />
+  <link rel="stylesheet" href="styles.css?v=34" />
 </head>
 
-<body>
+<body class="has-hero">
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="index.html">
-        <img class="brand-logo" src="Images/university-of-nevada-las-vegas-logo.png"
-          alt="University of Nevada, Las Vegas" />
+        <svg class="brand-mark" viewBox="0 0 64 64" width="52" height="52" aria-hidden="true" focusable="false">
+          <rect class="bm-tile" width="64" height="64" rx="14" />
+          <g class="bm-lines">
+            <path class="bm-stem" pathLength="100" d="M13 48V16" />
+            <path class="bm-mid" pathLength="100" d="M13 39c0-5 2.5-7 7-7h2" />
+            <path class="bm-top" pathLength="100" d="M13 26c0-6 3-8 9-8h5" />
+            <path class="bm-w" pathLength="100" d="M27 18 32.5 47 38 30l5.5 17L49 18" />
+          </g>
+          <circle class="bm-node bm-n1" cx="13" cy="47" r="3.6" />
+          <circle class="bm-node bm-n2" cx="22.5" cy="32" r="3.6" />
+          <circle class="bm-node bm-n3" cx="27" cy="18" r="3.6" />
+          <circle class="bm-ring" cx="49" cy="18" r="4.4" />
+          <g class="bm-head">
+            <circle class="bm-head-dot" cx="49" cy="18" r="4.4" />
+            <circle class="bm-head-hole" cx="49" cy="18" r="1.6" />
+          </g>
+        </svg>
         <span class="brand-name">Finnagin Wantland
           <span class="brand-tag">Computer Science, UNLV</span>
         </span>
@@ -44,27 +59,52 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="projects.html">Projects</a></li>
           <li><a href="blog.html" aria-current="page">Blog</a></li>
-          <li><a href="Finnagin-Wantland-Resume.pdf" target="_blank" rel="noopener">Resume</a></li>
+          <li><a href="Finnagin-Wantland-Resume.pdf" target="_blank" rel="noopener">Resume<svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="icons.svg#i-arrow-up-right"/></svg></a></li>
           <li><a href="index.html#contact">Contact</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <main class="container">
-    <h1>Blog</h1>
+  <main>
+    <section class="hero--dark page-hero" aria-labelledby="page-title">
+      <div class="motion-field" aria-hidden="true">
+        <div class="motion-glow motion-glow--a"></div>
+        <div class="motion-glow motion-glow--b"></div>
+        <div class="motion-dots"></div>
+        <div class="motion-lit"><div class="motion-dots"></div></div>
+      </div>
+      <div class="container page-hero-inner">
+        <p class="eyebrow">~/finnwantland/blog</p>
+        <h1 id="page-title">Blog</h1>
+        <p class="page-lede">Notes from learning Python, building a homelab, and whatever I'm working on next.</p>
+        <ul class="page-facts" aria-label="At a glance">
+          <li>2 posts</li>
+          <li>Python · Homelab</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="container">
     <ul class="post-list">
       <li>
-        <a href="posts/Py_Learning_Notebook.html">Python Setup and Coding Guide</a>
-        <p class="meta">Sep 18, 2025</p>
-        <p><i>This blog post will be continually updated as time goes on and the more I learn about Python!</i></p>
+        <span class="post-icon" aria-hidden="true"><svg class="icon icon--md" aria-hidden="true" focusable="false"><use href="icons.svg#i-file-text"/></svg></span>
+        <div class="post-body">
+          <a href="posts/Py_Learning_Notebook.html">Python Setup and Coding Guide<svg class="icon icon--sm icon-trail" data-dir="in" aria-hidden="true" focusable="false"><use href="icons.svg#i-arrow-right"/></svg></a>
+          <p class="meta"><svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="icons.svg#i-calendar"/></svg>Sep 18, 2025</p>
+          <p><i>This blog post will be continually updated as time goes on and the more I learn about Python!</i></p>
+        </div>
       </li>
       <li>
-        <a href="posts/Blog_Post_2.html">Homelabbing, Humble Beginnings</a>
-        <p class="meta">Feb 9, 2026</p>
-        <p><i>The beginning of my journey into homelabbing!</i></p>
+        <span class="post-icon" aria-hidden="true"><svg class="icon icon--md" aria-hidden="true" focusable="false"><use href="icons.svg#i-file-text"/></svg></span>
+        <div class="post-body">
+          <a href="posts/Blog_Post_2.html">Homelabbing, Humble Beginnings<svg class="icon icon--sm icon-trail" data-dir="in" aria-hidden="true" focusable="false"><use href="icons.svg#i-arrow-right"/></svg></a>
+          <p class="meta"><svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="icons.svg#i-calendar"/></svg>Feb 9, 2026</p>
+          <p><i>The beginning of my journey into homelabbing!</i></p>
+        </div>
       </li>
     </ul>
+    </div>
   </main>
 
   <footer class="site-footer">
