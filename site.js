@@ -55,6 +55,8 @@
     if (!header || !hero) return;
     const toggle = header.querySelector(".nav-toggle");
     const root = document.documentElement;
+    // The see-through styles only apply from here on (see .header--live in styles.css).
+    header.classList.add("header--live");
     // The open mobile menu makes the header taller; keep the closed height.
     const measure = () => {
       if (toggle && toggle.getAttribute("aria-expanded") === "true") return;

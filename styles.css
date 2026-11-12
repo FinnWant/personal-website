@@ -29,6 +29,7 @@
   --red-400: #f05252;
   --red-800: #8e0202;
   --green-500: #22c55e;
+  --green-700: #15803d;
 
   /* --- Logo (the FW git-graph mark) ------------------------------------------------- */
   --logo-tile: var(--gray-900);
@@ -99,6 +100,7 @@
   --hero-chip-bg: rgba(255, 255, 255, 0.08);
   --hero-chip-text: var(--gray-200);
   --hero-status: var(--green-500);
+  --status-ok: var(--green-700); /* success text on light surfaces (AA) */
   --hero-cta-hover: var(--accent-hover);
   --hero-ghost-border: rgba(255, 255, 255, 0.28);
   --hero-photo-border: rgba(255, 255, 255, 0.12);
@@ -357,14 +359,17 @@ a { color: var(--accent) }
    .header--glass  page has scrolled a little but the header is still over the hero →
                    frosted dark glass so the words stay readable over moving content
    .header--scrolled  the hero has passed under the header → the standard light header
-   Used by every page with a dark band at the top (body.has-hero); site.js runs it. */
-.has-hero .site-header {
+   Used by every page with a dark band at the top (body.has-hero); site.js runs it.
+   Every rule here also needs .header--live, which site.js adds when it starts tracking the
+   scroll. Without it (script missing, blocked, or a stale cached copy) the header stays
+   the normal solid one instead of getting stuck see-through over light content. */
+.has-hero .site-header.header--live {
   background: transparent;
   border-bottom-color: transparent;
   transition: background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
 }
 
-.has-hero .site-header.header--glass:not(.header--scrolled) {
+.has-hero .site-header.header--live.header--glass:not(.header--scrolled) {
   background: var(--hero-glass);
   box-shadow: inset 0 -1px 0 var(--hero-glass-rule);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
@@ -373,7 +378,7 @@ a { color: var(--accent) }
 
 /* Open mobile menu: near-solid instead of blurred. A backdrop-filter on the header would
    stop the dropped-down menu (its child) from blurring anything, so neither uses one. */
-.has-hero .site-header:not(.header--scrolled):has(.site-nav.is-open) {
+.has-hero .site-header.header--live:not(.header--scrolled):has(.site-nav.is-open) {
   background: var(--hero-glass-strong);
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
@@ -381,33 +386,33 @@ a { color: var(--accent) }
 
 .has-hero .hero--dark { margin-top: calc(-1 * var(--header-h)) }
 
-.has-hero .site-header .brand-name,
-.has-hero .site-header .brand-tag,
-.has-hero .site-header .nav a { transition: color 200ms ease, background-color 200ms ease }
+.has-hero .site-header.header--live .brand-name,
+.has-hero .site-header.header--live .brand-tag,
+.has-hero .site-header.header--live .nav a { transition: color 200ms ease, background-color 200ms ease }
 
-.has-hero .site-header:not(.header--scrolled) .brand-name { color: var(--hero-title) }
+.has-hero .site-header.header--live:not(.header--scrolled) .brand-name { color: var(--hero-title) }
 
-.has-hero .site-header:not(.header--scrolled) .brand-tag { color: var(--hero-body) }
+.has-hero .site-header.header--live:not(.header--scrolled) .brand-tag { color: var(--hero-body) }
 
-.has-hero .site-header:not(.header--scrolled) .nav a { color: var(--hero-body) }
+.has-hero .site-header.header--live:not(.header--scrolled) .nav a { color: var(--hero-body) }
 
-.has-hero .site-header:not(.header--scrolled) .nav a:hover { color: var(--hero-title); background: var(--hero-nav-hover-bg) }
+.has-hero .site-header.header--live:not(.header--scrolled) .nav a:hover { color: var(--hero-title); background: var(--hero-nav-hover-bg) }
 
-.has-hero .site-header:not(.header--scrolled) .nav a[aria-current="page"] {
+.has-hero .site-header.header--live:not(.header--scrolled) .nav a[aria-current="page"] {
   color: var(--hero-title);
   text-decoration: underline 2px var(--brand);
   text-underline-offset: 6px;
 }
 
-.has-hero .site-header:not(.header--scrolled) .nav-toggle { border-color: var(--hero-toggle-border) }
+.has-hero .site-header.header--live:not(.header--scrolled) .nav-toggle { border-color: var(--hero-toggle-border) }
 
-.has-hero .site-header:not(.header--scrolled) .nav-toggle:focus-visible { outline: 2px solid var(--hero-title) }
+.has-hero .site-header.header--live:not(.header--scrolled) .nav-toggle:focus-visible { outline: 2px solid var(--hero-title) }
 
-.has-hero .site-header:not(.header--scrolled) .nav-toggle span { background: var(--hero-title) }
+.has-hero .site-header.header--live:not(.header--scrolled) .nav-toggle span { background: var(--hero-title) }
 
-.has-hero .site-header:not(.header--scrolled) :focus-visible { outline-color: var(--hero-title) }
+.has-hero .site-header.header--live:not(.header--scrolled) :focus-visible { outline-color: var(--hero-title) }
 
-.has-hero .site-header.header--scrolled {
+.has-hero .site-header.header--live.header--scrolled {
   background: var(--bg);
   border-bottom-color: var(--border);
   box-shadow: var(--header-shadow);
@@ -774,6 +779,7 @@ a { color: var(--accent) }
   font-weight: 600;
   line-height: 1.2;
   text-decoration: none;
+  white-space: nowrap;
   transition: background var(--dur-fast) ease, border-color var(--dur-fast) ease,
     color var(--dur-fast) ease, transform var(--dur-fast) ease;
 }
@@ -1562,68 +1568,172 @@ h2 { margin: 0 0 1rem 0 }
 /* The global focus ring uses --accent, which is too dim on this panel in light mode. */
 .contact :focus-visible { outline: 2px solid var(--contact-hover); outline-offset: 2px }
 
-/* contact dialog */
+/* contact dialog — same language as the rest of the site: a dark band on top (motion field,
+   mono path eyebrow, display title), a light body with mono labels and 44px fields, and the
+   standard button pair. It rises in over a blurred backdrop (static for reduced motion). */
 .contact-dialog {
-  width: min(520px, calc(100vw - 2rem));
+  width: min(560px, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
   padding: 0;
   color: var(--text);
   background: var(--surface);
   border: 1px solid var(--border);
-  border-top: 4px solid var(--accent);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lift);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--proof-shadow), var(--shadow-lift);
+  overflow: auto;
 }
 
-.contact-dialog::backdrop { background: var(--backdrop) }
+.contact-dialog::backdrop {
+  background: var(--backdrop);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
 
-.contact-form { display: flex; flex-direction: column; gap: 0.4rem; padding: 1.25rem }
+@media (prefers-reduced-motion: no-preference) {
+  .contact-dialog[open] { animation: dialog-in 280ms var(--ease-out) }
 
-.contact-dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem }
+  .contact-dialog[open]::backdrop { animation: backdrop-in 280ms ease }
+}
 
-.contact-dialog-header h2 { margin: 0; font-size: 1.3rem; font-weight: 600 }
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.98) }
+}
+
+@keyframes backdrop-in {
+  from { opacity: 0 }
+}
+
+.contact-form { margin: 0 }
+
+.contact-dialog-header {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 28px 64px 26px 28px;
+  background: var(--hero-bg);
+  color: var(--hero-body);
+}
+
+.contact-dialog-header .eyebrow { margin-bottom: 10px }
+
+.contact-dialog-header h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--hero-title);
+}
+
+.contact-dialog-lede { margin: 8px 0 0 0; font-size: var(--text-control); color: var(--hero-body) }
 
 .dialog-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
-  margin-right: -10px;
-  color: var(--muted);
+  color: var(--hero-body);
   background: transparent;
   border: 0;
   border-radius: var(--radius-md);
   cursor: pointer;
+  transition: color var(--dur-fast) ease, background-color var(--dur-fast) ease;
 }
 
-.dialog-close:hover { color: var(--text); background: var(--surface-alt) }
+.dialog-close:hover { color: var(--hero-title); background: var(--hero-nav-hover-bg) }
 
-.contact-form label { font-weight: 600; font-size: 0.9rem; margin-top: 0.5rem }
+.dialog-close:focus-visible { outline: 2px solid var(--hero-title); outline-offset: 2px }
 
-.contact-form input, .contact-form textarea {
+.contact-dialog-body { position: relative; display: grid; gap: 16px; padding: 24px 28px 28px }
+
+.field-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px }
+
+.field { display: grid; gap: 6px; min-width: 0 }
+
+.contact-form label {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--meta);
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
   font: inherit;
   color: var(--text);
   background: var(--surface-alt);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0.5rem 0.65rem;
+  border-radius: var(--radius-md);
+  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease, background-color var(--dur-fast) ease;
 }
 
-.contact-form textarea { resize: vertical }
+.contact-form textarea { min-height: 128px; resize: vertical; line-height: 1.5 }
 
-.contact-form .cf-turnstile { margin-top: 0.75rem }
+.contact-form input::placeholder,
+.contact-form textarea::placeholder { color: var(--muted); opacity: 0.75 }
 
-.contact-status { margin: 0.25rem 0 0 0; min-height: 1.6em; color: var(--muted); font-size: 0.9rem }
+.contact-form input:hover,
+.contact-form textarea:hover { border-color: var(--border-strong) }
 
-.contact-actions { display: flex; justify-content: flex-end; gap: 0.6rem }
+/* The red ring replaces the outline on fields, so focus is still clearly visible. */
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  background: var(--surface);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
 
-.contact-actions button { font: inherit; cursor: pointer }
+.contact-form input:user-invalid,
+.contact-form textarea:user-invalid { border-color: var(--accent) }
+
+.contact-form .cf-turnstile:empty { display: none }
+
+.contact-status {
+  margin: 0;
+  min-height: 1.4em;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--meta);
+}
+
+.contact-status:empty { display: none }
+
+.contact-status[data-state="error"] { color: var(--accent) }
+
+.contact-status[data-state="ok"] { color: var(--status-ok) }
+
+.contact-actions { display: flex; justify-content: flex-end; gap: 12px; padding-top: 4px }
+
+.contact-actions button { font-family: inherit; cursor: pointer }
 
 .contact-actions button:disabled { opacity: 0.6; cursor: default }
+
+@media (max-width: 520px) {
+  .field-row { grid-template-columns: minmax(0, 1fr) }
+
+  .contact-dialog-header { padding: 24px 60px 22px 20px }
+
+  .contact-dialog-body { padding: 20px }
+
+  .contact-actions > * { flex: 1 }
+}
 
 .visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
@@ -1686,7 +1796,7 @@ pre { background: var(--code-bg); color: var(--code-text); padding: 1rem; border
 
   .nav a { padding: 0.7rem 0.5rem; border-bottom: 1px solid var(--border) }
 
-  .has-hero .site-header:not(.header--scrolled) .nav a { border-bottom-color: var(--hero-photo-border) }
+  .has-hero .site-header.header--live:not(.header--scrolled) .nav a { border-bottom-color: var(--hero-photo-border) }
 
   /* Home only: the menu drops over the hero instead of pushing it down, which would
      uncover the light page behind the transparent header. */
@@ -1700,7 +1810,7 @@ pre { background: var(--code-bg); color: var(--code-text); padding: 1rem; border
     box-shadow: var(--header-shadow);
   }
 
-  .has-hero .site-header:not(.header--scrolled) .site-nav {
+  .has-hero .site-header.header--live:not(.header--scrolled) .site-nav {
     background: var(--hero-glass-strong);
     box-shadow: inset 0 -1px 0 var(--hero-glass-rule);
   }
