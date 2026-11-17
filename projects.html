@@ -29,7 +29,7 @@
 <body class="has-hero">
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="index.html">
+      <a class="brand" href="https://go.finnwantland.dev/home">
         <svg class="brand-mark" viewBox="0 0 64 64" width="52" height="52" aria-hidden="true" focusable="false">
           <rect class="bm-tile" width="64" height="64" rx="14" />
           <g class="bm-lines">
@@ -56,10 +56,10 @@
       </button>
       <nav id="site-nav" class="site-nav" aria-label="Main">
         <ul class="nav">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="projects.html" aria-current="page">Projects</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="Finnagin-Wantland-Resume.pdf" target="_blank" rel="noopener">Resume<svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="icons.svg?v=2#i-arrow-up-right"/></svg></a></li>
+          <li><a href="https://go.finnwantland.dev/home">Home</a></li>
+          <li><a href="https://go.finnwantland.dev/projects" aria-current="page">Projects</a></li>
+          <li><a href="https://go.finnwantland.dev/blog">Blog</a></li>
+          <li><a href="https://go.finnwantland.dev/resume" target="_blank" rel="noopener">Resume<svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="icons.svg?v=2#i-arrow-up-right"/></svg></a></li>
           <li><a href="index.html#contact">Contact</a></li>
         </ul>
       </nav>
@@ -80,8 +80,8 @@
         <p class="page-lede">Simulations, desktop tools, games and web apps I've built to learn by doing. Every
           one is open source — the README has a quick start, or reach out and I'll help you get it running.</p>
         <ul class="page-facts" aria-label="At a glance">
-          <li>5 projects</li>
-          <li>C++ · Qt · TypeScript</li>
+          <li>6 projects</li>
+          <li>C++ · Python · TypeScript</li>
           <li>Source on GitHub</li>
         </ul>
       </div>
@@ -109,6 +109,32 @@
           <div class="card-actions">
             <a class="btn" href="/moknowledge/" target="_blank" rel="noopener">Try the live demo<svg class="icon icon--sm icon-trail" data-dir="out" aria-hidden="true" focusable="false"><use href="icons.svg?v=2#i-arrow-up-right"/></svg></a>
             <a class="btn-secondary" href="https://github.com/FinnWant/MoKnowledge"><svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="icons.svg?v=2#i-github"/></svg>View on GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <article id="project-6" class="card">
+        <div class="card-media"><img src="Images/Kiln.jpg" alt="Kiln dashboard showing host resources and two running agent sandboxes" width="960" height="540" loading="lazy" /></div>
+        <div class="card-body">
+          <h2 class="card-title"><a href="https://github.com/FinnWant/agent-hub">Kiln Agent Hub</a></h2>
+          <ul class="tags">
+            <li>Python</li>
+            <li>FastAPI</li>
+            <li>React</li>
+            <li>Docker</li>
+          </ul>
+          <p>A self-hosted platform for running Claude Code agents in locked-down sandboxes on my home server, steered from a browser, a Windows app or an iPhone over Tailscale. Nothing is exposed to the public internet.</p>
+          <ul class="card-points">
+            <li>Each run works on its own branch; I watch the log live, then review the diff before anything is pushed</li>
+            <li>Rootless Docker, a separate network per sandbox, and firewall rules that keep agents off my home network</li>
+            <li>The Claude token never enters a sandbox: a small gateway container holds it and meters every call</li>
+            <li>Push notifications when a run finishes or needs an approval</li>
+          </ul>
+          <p><span class="wip">Work in progress</span>
+            <progress max="100" value="85">85%</progress>
+          </p>
+          <div class="card-actions">
+            <a class="btn-secondary" href="https://github.com/FinnWant/agent-hub"><svg class="icon icon--sm" aria-hidden="true" focusable="false"><use href="icons.svg?v=2#i-github"/></svg>View on GitHub</a>
           </div>
         </div>
       </article>

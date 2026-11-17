@@ -33,7 +33,11 @@ The Figma design spec (tokens, icons, components, motion) lives at https://www.f
 
 ## The résumé
 
-Every page links to **`Finnagin-Wantland-Resume.pdf` at the repo root** — nav item, hero button, and the contact section. The file is user-supplied and is intentionally not in the repo, so **the link 404s until it is added**. If the filename ever changes it must be updated in all three pages plus the `download` copy in the hero.
+The résumé is **`Finnagin-Wantland-Resume.pdf` at the repo root**, but pages don't link to it directly — see the short-link note below. The file is user-supplied and is intentionally not in the repo. If the filename ever changes, update the `resume` target in the go.finnwantland.dev shortener, not the HTML.
+
+## Short links (go.finnwantland.dev)
+
+Nav, brand, and hero links to the top-level pages go through a self-hosted URL shortener for analytics: `https://go.finnwantland.dev/{home,projects,blog,resume}`, which redirect to `/`, `/projects.html`, `/blog.html`, and the résumé PDF. Use these codes for new links to those pages. Links with a fragment (`projects.html#project-N`, `index.html#contact`), `canonical` tags, and blog post links stay as direct relative URLs. Under the local `python3 -m http.server` preview, these nav links leave localhost for the live site.
 
 **The header/nav block is copy-pasted into all three pages.** Any nav change (new link, logo swap, `aria-current`) must be applied in `index.html`, `projects.html`, and `blog.html`. The same goes for project cards, which exist in both `index.html` and `projects.html`. This is the main maintenance cost of the site — there is no templating.
 
